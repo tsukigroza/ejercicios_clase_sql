@@ -59,3 +59,7 @@ CREATE TABLE tutor(
     CONSTRAINT	pk_tutor	PRIMARY KEY (codigo_curso, dni_profesor)
 );
 
+SHOW CREATE TABLE tutor;
+
+SHOW VARIABLES LIKE 'character_set';
+SHOW VARIABLES LIKE 'collation%';
