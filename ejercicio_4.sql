@@ -11,7 +11,7 @@ CREATE TABLE socio(
 
 -- Corregir id para que sea puesto por el sistema
 CREATE TABLE autor(
-	id	CHAR(10)	UNSIGNED	AUTO_INCREMENT PRIMARY KEY	NOT NULL,
+	id	INT AUTO_INCREMENT PRIMARY KEY,
     nombre	VARCHAR(80)	NOT NULL,
     pais	VARCHAR(100)	NOT NULL
 );
