@@ -11,25 +11,30 @@ CREATE TABLE socio(
 
 -- Corregir id para que sea puesto por el sistema
 CREATE TABLE autor(
-	id	INT AUTO_INCREMENT PRIMARY KEY,
+	id	INT UNSIGNED	AUTO_INCREMENT PRIMARY KEY,
     nombre	VARCHAR(80)	NOT NULL,
-    pais	VARCHAR(100)	NOT NULL
+    pais	VARCHAR(100)
 );
 
 CREATE TABLE articulo(
 	codigo	CHAR(10)	PRIMARY KEY	NOT NULL,
     titulo	VARCHAR(80)	NOT NULL,
-    id_autor	CHAR(10)	NOT NULL,
-    tipo	ENUM('Libro', 'CD', 'Pelicula')	NOT NULL,
-	paginas	SMALLINT UNSIGNED,
-    duracion	SMALLINT UNSIGNED,
-	CONSTRAINT chk_tipo	CHECK(
-		(tipo='Libro' AND paginas IS NOT NULL AND duracion IS NULL) OR
-		(tipo='CD' AND paginas IS NULL AND duracion IS NULL) OR
-		(tipo='Pelicula' AND paginas IS NULL AND duracion IS NOT NULL)    
+    id_autor	INT UNSIGNED	NOT NULL,
+    tipo	VARCHAR(8)	NOT NULL,
+	paginas	SMALLINT UNSIGNED, -- SOLO LIBROS
+    duracion	SMALLINT UNSIGNED, -- MINUTOS, SOLO PELICULAS
+    
+	CONSTRAINT chck_articulo_tipo CHECK(tipo IN ('Libro', 'CD', 'Pelicula')),
+    CONSTRAINT chck_articulo_subtipo CHECK (
+		(tipo='Libro' AND paginas IS NOT NULL and duracion IS NULL) OR
+        (tipo='Pelicula' AND paginas Is NULL AND duracion IS NOT NULL) OR
+        (tipo='CD' AND paginas IS NULL AND duracion IS NULL)
+    
     ),
     CONSTRAINT fk_articulo_autor	FOREIGN KEY (id_autor)	REFERENCES autor(id),
-    CONSTRAINT chk_codigo	CHECK (codigo REGEXP '^L-[0-9]{8}$')
+    CONSTRAINT chk_codigo	CHECK (codigo REGEXP ('^[LCP]-[0-9]{8}$')),
+    CONSTRAINT chk_articulo_paginas CHECK(paginas>0),
+    CONSTRAINT chk_articulo_duracion CHECK(duracion>0)
 
 );
 
@@ -52,7 +57,7 @@ CREATE TABLE prestamo(
 CREATE TABLE compra(
 	codigo_articulo	CHAR(10)	NOT NULL,
     dni_socio	CHAR(9)	NOT NULL,
-    CONSTRAINT pk_compra	PRIMARY KEY (codigo_articulo, dni_socio),
+    CONSTRAINT pk_compra	PRIMARY KEY (codigo_articulo),
     CONSTRAINT fk_compra_articulo	FOREIGN KEY (codigo_articulo)	REFERENCES articulo(codigo),
     CONSTRAINT fk_compra_socio	FOREIGN KEY (dni_socio)	REFERENCES	socio(dni)
 );
