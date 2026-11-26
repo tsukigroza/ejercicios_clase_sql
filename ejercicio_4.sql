@@ -42,24 +42,33 @@ CREATE TABLE palabra_clave(
 	codigo_articulo CHAR(10)	NOT NULL,
     palabra	VARCHAR(80)	NOT NULL,
     CONSTRAINT pk_palabra_clave	PRIMARY KEY (codigo_articulo, palabra),
-    CONSTRAINT	fk_palabra_clave_articulo	FOREIGN KEY (codigo_articulo) REFERENCES articulo(codigo)
+    CONSTRAINT	fk_palabra_clave_articulo	FOREIGN KEY (codigo_articulo) 
+		REFERENCES articulo(codigo)	ON DELETE CASCADE	ON UPDATE CASCADE
 );
 
+
+-- Tabla resultante de la relación N->M entre socio y artículo
 CREATE TABLE prestamo(
 	dni_socio	CHAR(9)	NOT NULL,
     codigo_articulo	CHAR(10)	NOT NULL,
     fecha	DATE	NOT NULL,
     CONSTRAINT pk_prestamo PRIMARY KEY (dni_socio, codigo_articulo, fecha),
-    CONSTRAINT fk_prestamo_socio	FOREIGN KEY (dni_socio)	REFERENCES socio(dni),
-    CONSTRAINT fk_prestamo_articulo	FOREIGN KEY (codigo_articulo)	REFERENCES articulo(codigo)
+    CONSTRAINT fk_prestamo_socio	FOREIGN KEY (dni_socio)	
+		REFERENCES socio(dni)	ON DELETE SET NULL,
+    CONSTRAINT fk_prestamo_articulo	FOREIGN KEY (codigo_articulo)	
+		REFERENCES articulo(codigo)	ON UPDATE CASCADE	ON DELETE SET NULL
 );
 
 CREATE TABLE compra(
 	codigo_articulo	CHAR(10)	NOT NULL,
     dni_socio	CHAR(9)	NOT NULL,
     CONSTRAINT pk_compra	PRIMARY KEY (codigo_articulo),
-    CONSTRAINT fk_compra_articulo	FOREIGN KEY (codigo_articulo)	REFERENCES articulo(codigo),
-    CONSTRAINT fk_compra_socio	FOREIGN KEY (dni_socio)	REFERENCES	socio(dni)
+    CONSTRAINT fk_compra_articulo	
+		FOREIGN KEY (codigo_articulo)	REFERENCES articulo(codigo) 
+        ON UPDATE CASCADE 	ON DELETE SET NULL,
+    CONSTRAINT fk_compra_socio	
+		FOREIGN KEY (dni_socio)	REFERENCES	socio(dni)	
+        ON DELETE SET NULL
 );
 
 
